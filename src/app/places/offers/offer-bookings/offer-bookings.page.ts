@@ -1,17 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Place } from '../../place.model';
 import { NavController } from '@ionic/angular';
 import { PlacesService } from '../../places.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-offer-bookings',
   templateUrl: './offer-bookings.page.html',
   styleUrls: ['./offer-bookings.page.scss'],
 })
-export class OfferBookingsPage implements OnInit {
+export class OfferBookingsPage implements OnInit, OnDestroy {
 
   place: Place;
+  private placeSub: Subscription;
   constructor(private route: ActivatedRoute, private navCtrl: NavController, private placesService: PlacesService) { }
 
   ngOnInit() {
@@ -21,8 +23,13 @@ export class OfferBookingsPage implements OnInit {
         return;
       }
       const placeId = paramMap.get('placeId');
-      this.place = this.placesService.getPlace(placeId);
+      this.placeSub = this.placesService.getPlace(placeId).subscribe(place => {
+        this.place = place;
+      });
     });
+  }
+  ngOnDestroy() {
+    this.placeSub.unsubscribe();
   }
 
 }

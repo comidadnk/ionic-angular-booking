@@ -1,22 +1,36 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PlacesService } from '../places.service';
 import { Place } from '../place.model';
 import { SegmentChangeEventDetail } from '@ionic/core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-discover',
   templateUrl: './discover.page.html',
   styleUrls: ['./discover.page.scss'],
 })
-export class DiscoverPage implements OnInit {
+export class DiscoverPage implements OnInit, OnDestroy {
   loadedPlaces: Place[];
-  constructor(private placeService: PlacesService) { }
+  listedLoadedPlaces: Place[];
+  private placesSub: Subscription;
+  constructor(private placesService: PlacesService) { }
 
   ngOnInit() {
-    this.loadedPlaces = this.placeService.Places;
+    this.placesSub = this.placesService.Places.subscribe(places => {
+      this.loadedPlaces = places;
+      this.listedLoadedPlaces = this.loadedPlaces.slice(1);
+    });
   }
+
+  /*ionViewDidEnter() {
+    this.loadedPlaces = this.placeService.Places;
+    console.log(this.loadedPlaces);
+  }*/
   onFilterUpdate(event: CustomEvent<SegmentChangeEventDetail>) {
     console.log(event.detail);
   }
 
+  ngOnDestroy() {
+    this.placesSub.unsubscribe();
+  }
 }

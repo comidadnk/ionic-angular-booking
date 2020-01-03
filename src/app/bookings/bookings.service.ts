@@ -5,6 +5,7 @@ import { Booking } from './booking.model';
   providedIn: 'root'
 })
 export class BookingsService {
+  // tslint:disable-next-line: variable-name
   private _bookings: Booking[] = [
     {
       id: 'b1',

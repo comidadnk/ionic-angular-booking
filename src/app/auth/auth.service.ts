@@ -7,8 +7,8 @@ import { Router } from '@angular/router';
 export class AuthService {
 
   // tslint:disable-next-line: variable-name
-  private _userIsAuthenticated = false;
-
+  private _userIsAuthenticated = true;
+  private _userId = 'abc';
   constructor() { }
 
   get userIsAuthenticated() {
@@ -19,5 +19,9 @@ export class AuthService {
   }
   logout() {
     this._userIsAuthenticated = false;
+  }
+
+  get UserId() {
+    return this._userId;
   }
 }
