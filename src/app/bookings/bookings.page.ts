@@ -20,10 +20,25 @@ export class BookingsPage implements OnInit, OnDestroy {
       this.loadedBookings = bookings;
     });
   }
+  ionViewWillEnter() {
+    if (this.loadedBookings.length > 0) {
+      return;
+    }
+    this.loadingCtrl.create({
+      message: 'Fetching ...',
+      mode: 'ios'
+    }).then(loadingEl => {
+      loadingEl.present();
+      this.bookingsService.fetchBookings().subscribe(respData => {
+        loadingEl.dismiss();
+      });
+    });
+  }
   onCancel(bookingId: string, slidingEl: IonItemSliding) {
     slidingEl.close();
     this.loadingCtrl.create({
-      message: 'Cancelling booking ...'
+      message: 'Cancelling booking ...',
+      mode: 'ios'
     }).then(loadingEl => {
       loadingEl.present();
       this.bookingsService.cancelBooking(bookingId).subscribe(() => {

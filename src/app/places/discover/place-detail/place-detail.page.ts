@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { NavController, ModalController, ActionSheetController, LoadingController } from '@ionic/angular';
+import { NavController, ModalController, ActionSheetController, LoadingController, AlertController } from '@ionic/angular';
 import { PlacesService } from '../../places.service';
 import { Place } from '../../place.model';
 import { CreateBookingComponent } from 'src/app/bookings/create-booking/create-booking.component';
@@ -16,6 +16,7 @@ import { AuthService } from 'src/app/auth/auth.service';
 export class PlaceDetailPage implements OnInit, OnDestroy {
   place: Place;
   isBookable = false;
+  isLoading = false;
   private placeSub: Subscription;
   constructor(
     private route: ActivatedRoute,
@@ -25,19 +26,40 @@ export class PlaceDetailPage implements OnInit, OnDestroy {
     private actionSheetCtrl: ActionSheetController,
     private bookingService: BookingsService,
     private loadingCtrl: LoadingController,
-    private authService: AuthService
+    private authService: AuthService,
+    private alertCtrl: AlertController
   ) {}
 
   ngOnInit() {
+    this.isLoading = true;
     this.route.paramMap.subscribe(paramMap => {
       if (!paramMap.has('placeId')) {
-        this.navCtrl.navigateBack('/places/tabs/offers');
+        this.navCtrl.navigateBack('/places/tabs/discover');
         return;
       }
       const placeId = paramMap.get('placeId');
-      this.placeSub = this.placesService.getPlace(placeId).subscribe(place => {
-        this.place = place;
-        this.isBookable = place.userId !== this.authService.UserId;
+      this.loadingCtrl.create({
+        message: 'Loading ...',
+        mode: 'ios'
+      }).then(loadingEl => {
+        loadingEl.present();
+        this.placeSub = this.placesService.getPlace(placeId).subscribe(place => {
+          this.place = place;
+          loadingEl.dismiss();
+          this.isLoading = false;
+          this.isBookable = place.userId !== this.authService.UserId;
+        }, error => {
+          loadingEl.dismiss();
+          this.alertCtrl.create({
+            message: 'Place could not be fetched. Please try again later.',
+            buttons: [{ text: 'Okay', handler: () => {
+              this.navCtrl.navigateBack('/places/tabs/discover');
+            }}],
+            mode: 'ios'
+          }).then(alertEl => {
+            alertEl.present();
+          });
+        });
       });
     });
   }
@@ -80,7 +102,8 @@ export class PlaceDetailPage implements OnInit, OnDestroy {
     }).then(resultData => {
       if (resultData.role === 'confirm') {
         this.loadingCtrl.create({
-          message: 'Booking Place ...'
+          message: 'Booking Place ...',
+          mode: 'ios'
         }).then(loadingEl => {
           loadingEl.present();
           const data = resultData.data.bookingData;

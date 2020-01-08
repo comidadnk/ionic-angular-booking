@@ -14,6 +14,10 @@
   <ion-grid>
     <ion-row>
       <ion-col size-md='8' offset-md='2'>
+        <div class="ion-text-center" *ngIf="offers.length == 0">
+          <p>No offers found! Please create one first!</p>
+          <ion-button color="primary" [routerLink]="'/places/tabs/offers/new'">Offer New Place </ion-button>
+        </div>
         <ion-list>
           <ion-item-sliding *ngFor = 'let offer of offers' #ionItemSliding>
             <app-offer-item [offer]='offer'></app-offer-item>
