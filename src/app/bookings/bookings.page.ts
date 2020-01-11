@@ -25,8 +25,7 @@ export class BookingsPage implements OnInit, OnDestroy {
       return;
     }
     this.loadingCtrl.create({
-      message: 'Fetching ...',
-      mode: 'ios'
+      message: 'Fetching ...'
     }).then(loadingEl => {
       loadingEl.present();
       this.bookingsService.fetchBookings().subscribe(respData => {
@@ -37,8 +36,7 @@ export class BookingsPage implements OnInit, OnDestroy {
   onCancel(bookingId: string, slidingEl: IonItemSliding) {
     slidingEl.close();
     this.loadingCtrl.create({
-      message: 'Cancelling booking ...',
-      mode: 'ios'
+      message: 'Cancelling booking ...'
     }).then(loadingEl => {
       loadingEl.present();
       this.bookingsService.cancelBooking(bookingId).subscribe(() => {

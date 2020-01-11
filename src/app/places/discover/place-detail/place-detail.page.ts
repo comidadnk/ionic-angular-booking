@@ -7,6 +7,7 @@ import { CreateBookingComponent } from 'src/app/bookings/create-booking/create-b
 import { Subscription } from 'rxjs';
 import { BookingsService } from 'src/app/bookings/bookings.service';
 import { AuthService } from 'src/app/auth/auth.service';
+import { MapModalComponent } from 'src/app/shared/map-modal/map-modal.component';
 
 @Component({
   selector: 'app-place-detail',
@@ -102,8 +103,7 @@ export class PlaceDetailPage implements OnInit, OnDestroy {
     }).then(resultData => {
       if (resultData.role === 'confirm') {
         this.loadingCtrl.create({
-          message: 'Booking Place ...',
-          mode: 'ios'
+          message: 'Booking Place ...'
         }).then(loadingEl => {
           loadingEl.present();
           const data = resultData.data.bookingData;
@@ -124,6 +124,19 @@ export class PlaceDetailPage implements OnInit, OnDestroy {
     });
   }
 
+  onShowFullMap() {
+    this.modalCtrl.create({
+      component: MapModalComponent,
+      componentProps: {
+        center: {lat: this.place.location.lat, lng: this.place.location.lng},
+        selectable: false,
+        closeButtonText: 'Close',
+        title: this.place.location.address
+      }
+    }).then(modalEl => {
+      modalEl.present();
+    });
+  }
   ngOnDestroy() {
     this.placeSub.unsubscribe();
   }

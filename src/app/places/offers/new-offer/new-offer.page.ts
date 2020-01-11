@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { PlacesService } from '../../places.service';
 import { NavController, LoadingController } from '@ionic/angular';
+import { PlaceLocation } from '../../location.model';
 
 @Component({
   selector: 'app-new-offer',
@@ -19,8 +20,17 @@ export class NewOfferPage implements OnInit {
       description: new FormControl(null, {updateOn: 'blur', validators: [Validators.maxLength(180)]}),
       price: new FormControl(null, {updateOn: 'blur', validators: [Validators.min(1)]}),
       dateFrom: new FormControl(null, {updateOn: 'blur', validators: [Validators.required]}),
-      dateTo: new FormControl(null, {updateOn: 'blur', validators: [Validators.required]})
+      dateTo: new FormControl(null, {updateOn: 'blur', validators: [Validators.required]}),
+      location: new FormControl(null, {updateOn: 'blur', validators: [Validators.required]})
     });
+  }
+
+  onLocationPicked(location: PlaceLocation) {
+    this.form.patchValue({location});
+  }
+
+  onImagePicked(imageData: any) {
+    console.log(imageData);
   }
 
   onCreateOffer() {
@@ -36,7 +46,8 @@ export class NewOfferPage implements OnInit {
         this.form.value.description,
         +this.form.value.price,
         new Date(this.form.value.dateFrom),
-        new Date(this.form.value.dateTo)
+        new Date(this.form.value.dateTo),
+        this.form.value.location
         ).subscribe(() => {
           this.form.reset();
           this.navCtrl.navigateBack('/places/tabs/offers');

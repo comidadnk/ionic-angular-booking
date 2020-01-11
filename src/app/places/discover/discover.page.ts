@@ -31,8 +31,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
       return;
     }
     this.loadingCtrl.create({
-      message: 'Fetching ...',
-      mode: 'ios'
+      message: 'Fetching ...'
     }).then(loadingEl => {
       loadingEl.present();
       this.placesService.fetchPlaces().subscribe(respData => {

@@ -3,10 +3,12 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  googleMapsAPIKey: 'AIzaSyAIj1PiK819x1GN_CjGQfF-g4VfdSsowDc'
 };
 
 /*
+AIzaSyA2pGtwOj0B88xtFosgiqT_jtMRyxfS9Ic
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
  *

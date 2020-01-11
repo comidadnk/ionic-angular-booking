@@ -52,8 +52,7 @@ export class EditOfferPage implements OnInit, OnDestroy {
           message: 'Place could not be fetched. Please try again later.',
           buttons: [{ text: 'Okay', handler: () => {
             this.navCtrl.navigateBack('/places/tabs/offers');
-          }}],
-          mode: 'ios'
+          }}]
         }).then(alertEl => {
           alertEl.present();
         });
@@ -66,8 +65,7 @@ export class EditOfferPage implements OnInit, OnDestroy {
       return;
     }
     this.loadingCtrl.create({
-      message: 'Updating Offer ...',
-      mode: 'ios'
+      message: 'Updating Offer ...'
     }).then(loadingEl => {
       loadingEl.present();
       this.placesService.updatePlace(
